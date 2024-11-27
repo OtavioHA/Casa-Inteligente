@@ -1,0 +1,96 @@
+const int sensor_temperatura = A3; 
+int temperatura;
+const int aquecedor = 8;
+const int sensor_gas = A2; 
+const int buzzer = 9;   
+const int sensor_pir = 10;
+const int lampadas_internas = 11;
+int valor_sensor_pir;
+const int ldr = A1;
+const int lampada_externa = 12;
+int valor_ldr;
+const int sensor_umidade = A0;
+int valor_umidade;
+const int bomba_agua = 13;
+
+void setup(){
+  Serial.begin(9600);
+  
+  
+  pinMode(aquecedor, OUTPUT);
+  pinMode(sensor_gas, INPUT); 
+  pinMode(buzzer, OUTPUT); 
+  pinMode(sensor_pir, INPUT);
+  pinMode(lampadas_internas, OUTPUT);
+  pinMode(lampada_externa, OUTPUT);
+  pinMode(bomba_agua, OUTPUT);
+  pinMode(sensor_umidade, INPUT);
+  pinMode(ldr, INPUT);
+}
+
+void loop(){
+  Serial.println("=====================");
+  // Leitura e controle da umidade
+  valor_umidade = analogRead(sensor_umidade);
+  int umidade_percentual = map(valor_umidade, 0, 1023, 0, 100);
+  Serial.print(umidade_percentual);
+  Serial.println("% de Umidade");
+
+  // Acionamento da bomba de água se a umidade estiver baixa
+  if (umidade_percentual < 65) {
+    digitalWrite(bomba_agua, HIGH); 
+  } else {
+    digitalWrite(bomba_agua, LOW);
+  }
+
+  // Leitura e controle da luz (LDR)
+  valor_ldr = analogRead(ldr);
+  float porcentagem_luz = (valor_ldr / 1023.0) * 100;
+  Serial.print(porcentagem_luz);
+  Serial.println("% de Luz");
+
+  if (porcentagem_luz < 80){
+    digitalWrite(lampada_externa, HIGH); 
+  } else {
+    digitalWrite(lampada_externa, LOW); 
+  }
+
+  // Leitura do sensor PIR e controle das lâmpadas internas
+  valor_sensor_pir = digitalRead(sensor_pir);
+  if (valor_sensor_pir == HIGH){
+    digitalWrite(lampadas_internas, HIGH);
+    Serial.println("Movimento Detectado");
+  } else {
+    digitalWrite(lampadas_internas, LOW);
+    Serial.println("Sem Movimento");
+  }
+
+  // Leitura do sensor de gás e acionamento do buzzer
+  int leituraGas = analogRead(sensor_gas); 
+  int porcentagem_gas = map(leituraGas, 0, 1023, 0, 100);
+  Serial.print(porcentagem_gas);
+  Serial.println("% de Gas");
+
+  if (porcentagem_gas > 7) {
+    tone(buzzer, 1450);  
+    delay(250);
+    tone(buzzer, 1890);  
+  } else {
+    noTone(buzzer); 
+  }
+
+  // Leitura e controle da temperatura
+  temperatura = (((analogRead(sensor_temperatura) * 5.0 / 1024.0) - 0.5) * 100.0);
+  Serial.print(temperatura);
+  Serial.println(" C de Temperatura");
+
+  if (temperatura < 36) {
+    digitalWrite(aquecedor, HIGH);  
+  } else {
+    digitalWrite(aquecedor, LOW);  
+  }
+
+  Serial.println("=====================");
+  delay(2000);  
+}
+
