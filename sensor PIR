@@ -1,0 +1,27 @@
+int sensor_pir = 10;
+int lampadas_internas = 11;
+int valor_sensor_pir;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(sensor_pir, INPUT);
+  pinMode(lampadas_internas, OUTPUT);
+}
+
+void loop() {
+  
+  valor_sensor_pir = digitalRead(sensor_pir);
+  
+  if(valor_sensor_pir == HIGH){
+    digitalWrite(lampadas_internas, HIGH);
+    Serial.println("Movimento Detectado");
+    delay(1000);
+  }
+  else{
+    digitalWrite(lampadas_internas, LOW);
+    Serial.println("Sem Movimento");
+    delay(1000);
+  }
+
+  delay(50);
+}
