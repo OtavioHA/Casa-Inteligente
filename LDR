@@ -1,0 +1,27 @@
+const int ldr = A1;
+int lampada_externa = 12;
+int valor_ldr;
+
+void setup(){
+  Serial.begin(9600);
+  pinMode(lampada_externa,OUTPUT);
+
+}
+
+void loop(){
+	
+  valor_ldr = analogRead(ldr);
+  float porcentagem_luz = (valor_ldr / 1023.0) * 100;
+  Serial.print(porcentagem_luz);
+  Serial.println("% de Luz");
+  delay(1000);
+  digitalWrite(lampada_externa, LOW);
+  
+  if(porcentagem_luz < 80){
+    digitalWrite(lampada_externa, HIGH);
+  }else {
+    digitalWrite(lampada_externa, LOW);
+  
+  }
+  delay(10);
+}
