@@ -1,0 +1,26 @@
+const int sensor_temperatura = A3; 
+int temperatura;
+int aquecedor = 8;
+
+void setup(){
+  Serial.begin(9600);
+  pinMode(aquecedor, OUTPUT);
+}
+
+void loop(){
+  
+  temperatura = (((analogRead(sensor_temperatura)*5.0/1024.0)-0.5)*100.0);
+  Serial.print(temperatura);
+  Serial.println(" C de Temperatura");
+  delay(1000);
+
+  
+  if(temperatura < 36){
+  
+    digitalWrite(aquecedor, HIGH);
+  }
+  else
+    digitalWrite(aquecedor,LOW);
+  
+  delay(100);
+}
