@@ -1,0 +1,30 @@
+int sensor_umidade = A0;
+
+int valor_umidade;
+int bomba_agua = 13;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(bomba_agua, OUTPUT);
+  pinMode(sensor_umidade, INPUT);
+ 
+}
+
+void loop()
+{
+ 
+  valor_umidade = analogRead(A0);
+  
+  int umidade_percentual = map(valor_umidade, 0,1023,0,100);
+  
+
+  Serial.print(umidade_percentual);
+  Serial.println("% de Umidade");
+  digitalWrite(bomba_agua, LOW);
+  
+  if (umidade_percentual < 65) {
+    digitalWrite(bomba_agua, HIGH); 
+  }
+  delay(100); 
+}
